@@ -1,10 +1,8 @@
 import { Citrus } from 'lucide-react'
 import { Link } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { axiosInstance } from '../lib/axios.js';
-import toast, { Toaster } from 'react-hot-toast';
-import { signup } from '../lib/api.js';
+import { Toaster } from 'react-hot-toast';
+import useSignup from '../hooks/useSignup';
 const SignUpPage = () => {
     const ref = useRef(null);
     const [fade, setFade] = useState(true);
@@ -30,17 +28,18 @@ const SignUpPage = () => {
         return () => clearInterval(interval);
     }, [])
 
-    const queryClient = useQueryClient();
-    const { mutate:signupMutation, isPending, error } = useMutation({
-        mutationFn: signup,
-        onSuccess: () => {
-            toast.success("Successfully Signed Up")
-            queryClient.invalidateQueries({ queryKey: ["authUser"] })
-        },
-        onError: (error)=>{
-            toast.error(error.response.data.message)
-        }
-    });
+    // const queryClient = useQueryClient();
+    // const { mutate:signupMutation, isPending, error } = useMutation({
+    //     mutationFn: signup,
+    //     onSuccess: () => {
+    //         toast.success("Successfully Signed Up")
+    //         queryClient.invalidateQueries({ queryKey: ["authUser"] })
+    //     },
+    //     onError: (error)=>{
+    //         toast.error(error.response.data.message)
+    //     }
+    // });
+    const {isPending, error, signupMutation} = useSignup();
     const handleSignup = (e) => {
         e.preventDefault();
         signupMutation(signupData);

@@ -1,13 +1,14 @@
-import { useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState, useEffect, useRef } from "react"
-import { Citrus } from "lucide-react"
+import { Citrus, LoaderPinwheelIcon} from "lucide-react"
 import { Link } from "react-router-dom"
-import toast, {Toaster} from 'react-hot-toast'
+import { Toaster } from "react-hot-toast"
+import useLogin from "../hooks/useLogin"
 const LoginPage = () => {
     const [fade, setFade] = useState(true);
     const ref = useRef(null)
-    const queryClient = useQueryClient()
-    const [loginData, setloginData] = useState({
+    const {isPending, error, loginMutation} = useLogin();
+    const [loginData, setLoginData] = useState({
         email: "",
         password: "",
     });
@@ -27,12 +28,18 @@ const LoginPage = () => {
         }, 4500);
         return () => clearInterval(interval);
     }, [])
-    const handleLogin = ()=>{
-
+    const handleLogin = (e) => {
+        e.preventDefault();
+        loginMutation(loginData)
     }
     return (
         <>
-            <div className="min-h-screen flex justify-center items-center p-4 sm:p-6 md:p-8" data-theme="nord">
+        <div className="flex flex-col items-center min-h-screen w-screen justify-center p-4" data-theme="nord">
+            <div className="w-full flex justify-center items-center space-x-6 p-4 md:p-6 lg:p-8">
+                <span className="text-5xl font-semibold text-primary">LOGIN</span>
+                <img src="./padlock.png" alt="" className="w-12" />
+            </div>
+            <div className="flex justify-center items-center p-4 sm:p-6 md:p-8">
                 <div className="border border-primary/25 flex flex-col lg:flex-row w-full max-w-5xl mx-auto bg-base-100 rounded-xl shadow-lg overflow-hidden">
                     {/*Image Right */}
                     <div className="lg:flex w-full bg-primary/10 items-center justify-center">
@@ -72,7 +79,7 @@ const LoginPage = () => {
                                                 placeholder="Rahul@gmail.com"
                                                 className="input input-bordered w-full"
                                                 value={loginData.email}
-                                                onChange={(e) => setSignUpData({ ...loginData, email: e.target.value })}
+                                                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                                                 required
                                             />
                                             <label className="label">
@@ -82,7 +89,7 @@ const LoginPage = () => {
                                                 placeholder="********"
                                                 className="input input-bordered w-full"
                                                 value={loginData.password}
-                                                onChange={(e) => setSignUpData({ ...loginData, password: e.target.value })}
+                                                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                                                 required
                                             />
                                             <p className="text-xs opacity-70 mt-1">
@@ -90,10 +97,21 @@ const LoginPage = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    {/* <button className={`btn btn-primary w-full ${isPending ? 'animate-pulse' : ''}`} type="submit">{isPending ? (<span className='loading loading-spinner loading-xs'></span>) : ("Login")}</button> */}
+                                    <button disabled={isPending} className={`btn btn-primary w-full ${isPending ? 'animate-pulse' : ''}`} type="submit">
+                                        {!isPending?(
+                                        <>
+                                        <span className='text-white'>Sign in</span>
+                                            
+                                        </>
+                                    ):(
+                                        <>
+                                        <LoaderPinwheelIcon className="animate-spin size-5 text-white"/>
+                                        </>
+                                    )}
+                                    </button>
                                     <p className="test-sm">
                                         Don't have an account?{" "}
-                                        <Link to="/signup" className="text-primary hover:underline">Sign in</Link>
+                                        <Link to="/signup" className="text-primary hover:underline">Create One</Link>
                                     </p>
                                 </div>
                                 <Toaster />
@@ -103,7 +121,7 @@ const LoginPage = () => {
                     </div>
                 </div>
             </div>
-
+        </div>
         </>
     )
 }

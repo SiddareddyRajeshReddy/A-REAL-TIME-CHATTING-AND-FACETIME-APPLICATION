@@ -10,6 +10,7 @@ import ChatPage from './pages/ChatPage.jsx';
 import { Navigate } from 'react-router';
 import { PageLoader } from './components/PageLoader.jsx';
 import useAuthUser from './hooks/useAuthUser.js';
+import { Layout } from './components/layout.jsx';
 function App() {
   const {isLoading, authUser} = useAuthUser()
   const isAuthenticated = Boolean(authUser)
@@ -19,9 +20,9 @@ function App() {
     <>
       <div className='h-screen' data-theme='nord'>
           <Routes>
-              <Route path="/" element={isAuthenticated && isOnboarded? (<HomePage />):<Navigate to={!isAuthenticated?"/login":"/onboarding"} />} />
+              <Route path="/" element={isAuthenticated && isOnboarded? (<Layout showSidebar={true}><HomePage /></Layout>):<Navigate to={!isAuthenticated?"/login":"/onboarding"} />} />
               <Route path="/signup" element={!isAuthenticated? <SignUpPage />:<Navigate to="/" />} />
-              <Route path="/login" element={!isAuthenticated? <LoginPage />:<Navigate to="/" />} />
+              <Route path="/login" element={!isAuthenticated? <LoginPage />:<Navigate to={isOnboarded? "/": "/onboarding"} />} />
               <Route path="/notifications" element={isAuthenticated? <NotificationsPage />:<Navigate to="/login" />} />
               <Route path="/call" element={isAuthenticated? <CallPage />:<Navigate to="/login" />} />
               <Route path="/chat" element={isAuthenticated? <ChatPage />:<Navigate to="/login" />} />
