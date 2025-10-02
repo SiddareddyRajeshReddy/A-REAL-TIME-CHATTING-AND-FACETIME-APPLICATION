@@ -10,7 +10,7 @@ import ChatPage from './pages/ChatPage.jsx';
 import { Navigate } from 'react-router';
 import { PageLoader } from './components/PageLoader.jsx';
 import useAuthUser from './hooks/useAuthUser.js';
-import { Layout } from './components/layout.jsx';
+import { Layout } from './components/Layout.jsx';
 import useTheme from './store/useTheme.js';
 function App() {
   const {isLoading, authUser} = useAuthUser()
