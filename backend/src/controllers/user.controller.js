@@ -84,6 +84,8 @@ export async function acceptFriendRequest(req, res) {
         //Add each other to friends list
         await User.findByIdAndUpdate(senderId, { $push: {friends: recipientId} });
         await User.findByIdAndUpdate(recipientId, { $push: {friends: senderId}});
+        await FriendRequest.findByIdAndUpdate(requestId,{status: "accepted"});
+        await FriendRequest.findOneAndUpdate({sender: recipientId, recipient: senderId},{status: "accepted"});
 
         res.status(200).json({success: true, message: "Friend request accepted successfully"});
     }
@@ -97,7 +99,7 @@ export async function getFriendRequests(req, res) {
     try{
         const incomingReqs = await FriendRequest.find({recipient: req.user._id, status: "pending"}).populate("sender", "fullName profilePic nativeLang learningLang location");
 
-        const acceptedReqs = await FriendRequest.find({recipient: req.user._id, status: "accepted"}).populate("recipient", "fullName profilePic nativeLang learningLang location");
+        const acceptedReqs = await FriendRequest.find({sender: req.user._id, status: "accepted"}).populate("recipient", "fullName profilePic nativeLang learningLang location");
         res.status(200).json({success: true, incomingReqs, acceptedReqs});
     }
     catch (error) {

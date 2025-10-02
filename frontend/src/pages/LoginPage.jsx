@@ -34,7 +34,7 @@ const LoginPage = () => {
     }
     return (
         <>
-        <div className="flex flex-col items-center min-h-screen w-screen justify-center p-4" data-theme="nord">
+        <div className="flex flex-col items-center min-h-screen w-screen justify-center p-4">
             <div className="w-full flex justify-center items-center space-x-6 p-4 md:p-6 lg:p-8">
                 <span className="text-5xl font-semibold text-primary">LOGIN</span>
                 <img src="./padlock.png" alt="" className="w-12" />
